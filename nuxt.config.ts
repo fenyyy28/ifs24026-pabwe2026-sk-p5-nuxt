@@ -21,10 +21,12 @@ export default defineNuxtConfig({
   hooks: {
     "pages:extend"(pages) {
       pages.push(
-        // Sementara, sampai dashboard dibuat
-        { name: "home", path: "/", redirect: "/auth/login" },
+        // Sementara, sampai halaman utama cash flow dibuat
+        { name: "home", path: "/", redirect: "/users" },
         { name: "login", path: "/auth/login", file: featurePage("auth/pages/LoginPage.vue") },
         { name: "register", path: "/auth/register", file: featurePage("auth/pages/RegisterPage.vue") },
+        { name: "users", path: "/users", file: featurePage("users/pages/UsersPage.vue") },
+        { name: "profile", path: "/profile", file: featurePage("users/pages/ProfilePage.vue") },
       );
     },
   },

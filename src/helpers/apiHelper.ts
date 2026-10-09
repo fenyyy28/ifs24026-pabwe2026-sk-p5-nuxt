@@ -11,6 +11,7 @@ export interface ApiResponse<T = undefined> {
 export interface RequestOptions {
   method?: "GET" | "POST" | "PUT" | "DELETE";
   query?: ApiQuery;
+  /** Objek biasa dikirim sebagai JSON, FormData dikirim apa adanya (unggah berkas). */
   body?: unknown;
   /** Sertakan header Bearer Token. Default: true */
   auth?: boolean;
@@ -71,19 +72,19 @@ export async function apiRequest<T = undefined>(
 ): Promise<ApiResponse<T>> {
   const { method = "GET", query, body, auth = true } = options;
 
+  const isForm = body instanceof FormData;
   const headers: Record<string, string> = { Accept: "application/json" };
-  if (body !== undefined) headers["Content-Type"] = "application/json";
+  if (body !== undefined && !isForm) headers["Content-Type"] = "application/json";
 
   const token = auth ? getAccessToken() : null;
   if (token) headers.Authorization = `Bearer ${token}`;
 
+  const requestBody =
+    body === undefined || isForm ? (body as FormData | undefined) : JSON.stringify(body);
+
   let response: Response;
   try {
-    response = await fetch(buildUrl(path, query), {
-      method,
-      headers,
-      body: body !== undefined ? JSON.stringify(body) : undefined,
-    });
+    response = await fetch(buildUrl(path, query), { method, headers, body: requestBody });
   } catch {
     throw new ApiError("Tidak dapat terhubung ke server. Periksa koneksi internet Anda.");
   }
