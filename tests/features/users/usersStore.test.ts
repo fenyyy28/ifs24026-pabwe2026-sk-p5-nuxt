@@ -13,6 +13,7 @@ vi.mock("~/features/users/api/userApi", () => ({
 
 const api = userApi as unknown as Record<string, ReturnType<typeof vi.fn>>;
 const me = { id: 1, name: "Feny", email: "f@x.id" };
+const passwordPayload = { password: "a", new_password: "b", new_password_confirmation: "b" };
 
 beforeEach(() => {
   Object.values(api).forEach((fn) => fn.mockReset());
@@ -51,7 +52,7 @@ describe("useUsersStore", () => {
     api.updateMe!.mockResolvedValue("Tersimpan");
     api.getMe!.mockResolvedValue({ ...me, name: "Baru" });
     const store = useUsersStore();
-    const payload = { name: "Baru", email: "f@x.id", bio: "" };
+    const payload = { name: "Baru", email: "f@x.id" };
     expect(await store.updateProfile(payload)).toBe("Tersimpan");
     expect(api.updateMe).toHaveBeenCalledWith(payload);
     expect(store.profile?.name).toBe("Baru");
@@ -71,14 +72,14 @@ describe("useUsersStore", () => {
   it("changePassword mengembalikan pesan", async () => {
     api.changePassword!.mockResolvedValue("Sandi diubah");
     const store = useUsersStore();
-    expect(await store.changePassword({ password: "a", new_password: "b" })).toBe("Sandi diubah");
+    expect(await store.changePassword(passwordPayload)).toBe("Sandi diubah");
     expect(store.isSaving).toBe(false);
   });
 
   it("aksi simpan yang gagal mengembalikan isSaving", async () => {
     api.changePassword!.mockRejectedValue(new Error("gagal"));
     const store = useUsersStore();
-    await expect(store.changePassword({ password: "a", new_password: "b" })).rejects.toThrow();
+    await expect(store.changePassword(passwordPayload)).rejects.toThrow();
     expect(store.isSaving).toBe(false);
   });
 

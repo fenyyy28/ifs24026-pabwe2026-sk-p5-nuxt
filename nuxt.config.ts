@@ -21,12 +21,28 @@ export default defineNuxtConfig({
   hooks: {
     "pages:extend"(pages) {
       pages.push(
-        // Sementara, sampai halaman utama cash flow dibuat
-        { name: "home", path: "/", redirect: "/users" },
         { name: "login", path: "/auth/login", file: featurePage("auth/pages/LoginPage.vue") },
         { name: "register", path: "/auth/register", file: featurePage("auth/pages/RegisterPage.vue") },
-        { name: "users", path: "/users", file: featurePage("users/pages/UsersPage.vue") },
-        { name: "profile", path: "/profile", file: featurePage("users/pages/ProfilePage.vue") },
+        {
+          // Shell dashboard terproteksi; halaman anak tampil di <NuxtPage />
+          path: "/",
+          file: featurePage("cashflows/layouts/CashFlowLayout.vue"),
+          children: [
+            { name: "home", path: "", file: featurePage("cashflows/pages/HomePage.vue") },
+            {
+              name: "cash-flow-detail",
+              path: "cash-flows/:cashFlowId",
+              file: featurePage("cashflows/pages/DetailPage.vue"),
+            },
+            { name: "users", path: "users", file: featurePage("users/pages/UsersPage.vue") },
+            { name: "profile", path: "profile", file: featurePage("users/pages/ProfilePage.vue") },
+          ],
+        },
+        {
+          name: "not-found",
+          path: "/:pathMatch(.*)*",
+          file: featurePage("common/pages/NotFoundPage.vue"),
+        },
       );
     },
   },

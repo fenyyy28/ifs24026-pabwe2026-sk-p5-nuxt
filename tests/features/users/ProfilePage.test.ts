@@ -8,7 +8,6 @@ import { useUsersStore } from "~/features/users/states/usersStore";
 import { ApiError } from "~/helpers/apiHelper";
 import { showErrorDialog, showSuccessDialog } from "~/helpers/toolsHelper";
 
-vi.mock("vue-router", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 vi.mock("~/helpers/toolsHelper", () => ({ showErrorDialog: vi.fn(), showSuccessDialog: vi.fn() }));
 vi.mock("~/features/users/api/userApi", () => ({
   getUsers: vi.fn(),
@@ -22,16 +21,17 @@ const api = userApi as unknown as Record<string, ReturnType<typeof vi.fn>>;
 const errorDialog = showErrorDialog as unknown as ReturnType<typeof vi.fn>;
 const successDialog = showSuccessDialog as unknown as ReturnType<typeof vi.fn>;
 
-const profile: User = { id: 1, name: "Feny", email: "f@x.id", photo: null, bio: "Halo" };
+const profile: User = { id: 1, name: "Feny", email: "f@x.id", photo: null };
 
 function factory(initial: User | null = profile) {
   const pinia = createPinia();
   setActivePinia(pinia);
   useUsersStore().profile = initial;
-  return mount(ProfilePage, {
-    global: { plugins: [pinia], components: { NuxtLink: { template: "<a><slot /></a>" } } },
-  });
+  return mount(ProfilePage, { global: { plugins: [pinia] } });
 }
+
+const value = (wrapper: ReturnType<typeof factory>, selector: string) =>
+  (wrapper.get(selector).element as HTMLInputElement).value;
 
 beforeEach(() => {
   Object.values(api).forEach((fn) => fn.mockReset());
@@ -41,19 +41,14 @@ beforeEach(() => {
 
 describe("ProfilePage", () => {
   it("menampilkan skeleton saat profil belum ada", () => {
-    api.getMe!.mockReturnValue(new Promise(() => {}));
     const wrapper = factory(null);
     expect(wrapper.find("#profile-skeleton").exists()).toBe(true);
   });
 
-  it("mengisi form dari profil (bio kosong menjadi string kosong)", () => {
+  it("mengisi form dari profil", () => {
     const wrapper = factory();
-    expect((wrapper.get("#profile-name-input").element as HTMLInputElement).value).toBe("Feny");
-    expect((wrapper.get("#profile-email-input").element as HTMLInputElement).value).toBe("f@x.id");
-    expect((wrapper.get("#profile-bio-input").element as HTMLTextAreaElement).value).toBe("Halo");
-
-    const noBio = factory({ ...profile, bio: null });
-    expect((noBio.get("#profile-bio-input").element as HTMLTextAreaElement).value).toBe("");
+    expect(value(wrapper, "#profile-name-input")).toBe("Feny");
+    expect(value(wrapper, "#profile-email-input")).toBe("f@x.id");
   });
 
   it("menyimpan profil", async () => {
@@ -62,11 +57,10 @@ describe("ProfilePage", () => {
     const wrapper = factory();
     await wrapper.get("#profile-name-input").setValue("Baru");
     await wrapper.get("#profile-email-input").setValue("baru@x.id");
-    await wrapper.get("#profile-bio-input").setValue("Bio baru");
     await wrapper.get("form").trigger("submit");
     await flushPromises();
 
-    expect(api.updateMe).toHaveBeenCalledWith({ name: "Baru", email: "baru@x.id", bio: "Bio baru" });
+    expect(api.updateMe).toHaveBeenCalledWith({ name: "Baru", email: "baru@x.id" });
     expect(successDialog).toHaveBeenCalledWith("Profil diperbarui");
   });
 
@@ -75,7 +69,6 @@ describe("ProfilePage", () => {
       new ApiError("Data tidak valid", 400, {
         name: ["Nama wajib"],
         email: ["Email tidak valid"],
-        bio: ["Bio terlalu panjang"],
       }),
     );
     const wrapper = factory();
@@ -84,7 +77,6 @@ describe("ProfilePage", () => {
 
     expect(wrapper.text()).toContain("Nama wajib");
     expect(wrapper.text()).toContain("Email tidak valid");
-    expect(wrapper.text()).toContain("Bio terlalu panjang");
     expect(errorDialog).toHaveBeenCalledWith("Data tidak valid");
   });
 
@@ -131,31 +123,35 @@ describe("ProfilePage", () => {
     const wrapper = factory();
     await wrapper.get("#profile-current-password-input").setValue("lama");
     await wrapper.get("#profile-new-password-input").setValue("baru");
-    const forms = wrapper.findAll("form");
-    await forms[1]!.trigger("submit");
+    await wrapper.get("#profile-confirm-password-input").setValue("baru");
+    await wrapper.findAll("form")[1]!.trigger("submit");
     await flushPromises();
 
-    expect(api.changePassword).toHaveBeenCalledWith({ password: "lama", new_password: "baru" });
+    expect(api.changePassword).toHaveBeenCalledWith({
+      password: "lama",
+      new_password: "baru",
+      new_password_confirmation: "baru",
+    });
     expect(successDialog).toHaveBeenCalledWith("Sandi diubah");
-    expect((wrapper.get("#profile-current-password-input").element as HTMLInputElement).value).toBe("");
-    expect((wrapper.get("#profile-new-password-input").element as HTMLInputElement).value).toBe("");
+    expect(value(wrapper, "#profile-current-password-input")).toBe("");
+    expect(value(wrapper, "#profile-new-password-input")).toBe("");
+    expect(value(wrapper, "#profile-confirm-password-input")).toBe("");
   });
 
   it("menampilkan error kata sandi dan mempertahankan isi form", async () => {
     api.changePassword!.mockRejectedValue(
       new ApiError("Data tidak valid", 400, {
         password: ["Kata sandi lama salah"],
-        new_password: ["Kata sandi baru terlalu pendek"],
+        new_password: ["Konfirmasi tidak cocok"],
       }),
     );
     const wrapper = factory();
     await wrapper.get("#profile-current-password-input").setValue("salah");
-    const forms = wrapper.findAll("form");
-    await forms[1]!.trigger("submit");
+    await wrapper.findAll("form")[1]!.trigger("submit");
     await flushPromises();
 
     expect(wrapper.text()).toContain("Kata sandi lama salah");
-    expect(wrapper.text()).toContain("Kata sandi baru terlalu pendek");
-    expect((wrapper.get("#profile-current-password-input").element as HTMLInputElement).value).toBe("salah");
+    expect(wrapper.text()).toContain("Konfirmasi tidak cocok");
+    expect(value(wrapper, "#profile-current-password-input")).toBe("salah");
   });
 });
