@@ -1,7 +1,11 @@
+import { fileURLToPath } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 
 const APP_PORT = Number(process.env.APP_PORT) || 3000;
 const DELCOM_BASEURL = process.env.VITE_DELCOM_BASEURL ?? "";
+
+const featurePage = (path: string) =>
+  fileURLToPath(new URL(`./src/features/${path}`, import.meta.url));
 
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
@@ -12,6 +16,18 @@ export default defineNuxtConfig({
   css: ["~/index.css"],
 
   devServer: { port: APP_PORT },
+
+  pages: true,
+  hooks: {
+    "pages:extend"(pages) {
+      pages.push(
+        // Sementara, sampai dashboard dibuat
+        { name: "home", path: "/", redirect: "/auth/login" },
+        { name: "login", path: "/auth/login", file: featurePage("auth/pages/LoginPage.vue") },
+        { name: "register", path: "/auth/register", file: featurePage("auth/pages/RegisterPage.vue") },
+      );
+    },
+  },
 
   app: {
     head: {
