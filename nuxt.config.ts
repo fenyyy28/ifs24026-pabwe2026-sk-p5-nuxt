@@ -1,7 +1,7 @@
 import tailwindcss from "@tailwindcss/vite";
 
 const APP_PORT = Number(process.env.APP_PORT) || 3000;
-const DELCOM_BASEURL = process.env.VITE_DELCOM_BASEURL ?? "";
+const DELCOM_BASEURL = process.env.VITE_DELCOM_BASEURL || "https://open-api.delcom.org/api/v1";
 
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
