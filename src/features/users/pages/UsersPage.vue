@@ -68,7 +68,7 @@ void loadUsers();
         <div class="min-w-0">
           <p class="truncate font-semibold text-slate-900">{{ user.name }}</p>
           <p class="truncate text-sm text-slate-500">{{ user.email }}</p>
-          <p class="mt-1 text-xs text-slate-400">Bergabung {{ formatDate(user.created_at) }}</p>
+          <p class="mt-1 text-xs text-slate-500">Bergabung {{ formatDate(user.created_at) }}</p>
         </div>
       </li>
     </ul>

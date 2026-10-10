@@ -1,7 +1,10 @@
 import tailwindcss from "@tailwindcss/vite";
 
 const APP_PORT = Number(process.env.APP_PORT) || 3000;
-const DELCOM_BASEURL = process.env.VITE_DELCOM_BASEURL || "https://open-api.delcom.org/api/v1";
+const DELCOM_BASEURL =
+  process.env.VITE_DELCOM_BASEURL || "https://open-api.delcom.org/api/v1";
+const FONT_URL =
+  "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap";
 
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
@@ -18,15 +21,22 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      htmlAttrs: { lang: "id" },
       title: "Delcom Cash Flow",
+      meta: [
+        {
+          name: "description",
+          content:
+            "Catat pemasukan dan pengeluaran, lalu pantau saldo kas, tabungan, dan pinjaman Anda dengan Delcom Cash Flow.",
+        },
+      ],
       link: [
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
-        {
-          rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
-        },
+        // Dimuat tanpa memblokir render pertama
+        { rel: "stylesheet", href: FONT_URL, media: "print", onload: "this.media='all'" },
       ],
+      noscript: [{ innerHTML: `<link rel="stylesheet" href="${FONT_URL}">` }],
     },
   },
 

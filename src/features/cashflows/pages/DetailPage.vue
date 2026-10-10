@@ -73,31 +73,31 @@ void load();
 
         <dl class="mt-6 grid gap-5 sm:grid-cols-2">
           <div>
-            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Jenis</dt>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">Jenis</dt>
             <dd class="mt-1 font-semibold text-slate-800">{{ TYPE_META[store.cashFlow.type].label }}</dd>
           </div>
           <div>
-            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Kategori</dt>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">Kategori</dt>
             <dd class="mt-1 font-semibold text-slate-800">{{ store.cashFlow.label }}</dd>
           </div>
           <div>
-            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Sumber dana</dt>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">Sumber dana</dt>
             <dd class="mt-1 font-semibold text-slate-800">{{ SOURCE_LABELS[store.cashFlow.source] }}</dd>
           </div>
           <div>
-            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Nominal</dt>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">Nominal</dt>
             <dd class="mt-1 font-semibold text-slate-800">{{ formatRupiah(store.cashFlow.nominal) }}</dd>
           </div>
           <div>
-            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Dibuat</dt>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">Dibuat</dt>
             <dd class="mt-1 text-slate-700">{{ formatDateTime(store.cashFlow.created_at) }}</dd>
           </div>
           <div>
-            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Diperbarui</dt>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">Diperbarui</dt>
             <dd class="mt-1 text-slate-700">{{ formatDateTime(store.cashFlow.updated_at) }}</dd>
           </div>
           <div class="sm:col-span-2">
-            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Deskripsi</dt>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">Deskripsi</dt>
             <dd class="mt-1 whitespace-pre-line text-slate-700">{{ store.cashFlow.description }}</dd>
           </div>
         </dl>

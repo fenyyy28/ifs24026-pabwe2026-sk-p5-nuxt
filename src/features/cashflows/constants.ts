@@ -7,13 +7,13 @@ export const TYPE_META: Record<
   inflow: {
     label: "Pemasukan",
     badge: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
-    amount: "text-emerald-600",
+    amount: "text-emerald-700",
     sign: "+",
   },
   outflow: {
     label: "Pengeluaran",
     badge: "bg-rose-50 text-rose-700 ring-rose-600/20",
-    amount: "text-rose-600",
+    amount: "text-rose-700",
     sign: "-",
   },
 };
