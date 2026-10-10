@@ -2,7 +2,6 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { Eye, EyeOff, LoaderCircle, Lock, Mail } from "lucide-vue-next";
-import AuthLayout from "~/features/auth/layouts/AuthLayout.vue";
 import { useAuthStore } from "~/features/auth/states/authStore";
 import type { ApiError } from "~/helpers/apiHelper";
 import { showErrorDialog } from "~/helpers/toolsHelper";
@@ -30,8 +29,11 @@ async function handleSubmit(): Promise<void> {
 </script>
 
 <template>
-  <AuthLayout title="Selamat datang kembali" subtitle="Masuk untuk melanjutkan ke akun Anda.">
-    <form class="space-y-5" novalidate @submit.prevent="handleSubmit">
+  <div>
+    <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Selamat datang kembali</h1>
+    <p class="mt-2 text-slate-500">Masuk untuk melanjutkan ke akun Anda.</p>
+
+    <form class="mt-8 space-y-5" novalidate @submit.prevent="handleSubmit">
       <div>
         <label for="login-email-input" class="mb-1.5 block text-sm font-semibold text-slate-700">
           Email
@@ -85,11 +87,11 @@ async function handleSubmit(): Promise<void> {
       </button>
     </form>
 
-    <template #footer>
+    <p class="mt-6 text-center text-sm text-slate-500">
       Belum punya akun?
       <NuxtLink to="/auth/register" class="font-semibold text-indigo-600 hover:text-indigo-700">
         Daftar sekarang
       </NuxtLink>
-    </template>
-  </AuthLayout>
+    </p>
+  </div>
 </template>

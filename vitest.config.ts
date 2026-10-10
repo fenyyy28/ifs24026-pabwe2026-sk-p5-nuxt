@@ -11,12 +11,13 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true,
+    setupFiles: ["./src/setupTests.ts"],
     include: ["tests/**/*.{test,spec}.ts"],
     coverage: {
       provider: "v8",
       reporter: ["text", "html", "lcov"],
       include: ["src/**/*.{ts,vue}"],
-      exclude: ["src/**/*.d.ts", "src/app.vue"],
+      exclude: ["src/**/*.d.ts"],
       thresholds: { statements: 100, branches: 100, functions: 100, lines: 100 },
     },
   },

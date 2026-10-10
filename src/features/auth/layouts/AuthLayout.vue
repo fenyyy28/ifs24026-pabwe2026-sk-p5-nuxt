@@ -1,10 +1,5 @@
 <script setup lang="ts">
 import { BarChart3, ShieldCheck, Wallet } from "lucide-vue-next";
-
-defineProps<{
-  title: string;
-  subtitle: string;
-}>();
 </script>
 
 <template>
@@ -50,16 +45,7 @@ defineProps<{
           <span class="text-lg font-extrabold tracking-tight">Delcom Cash Flow</span>
         </div>
 
-        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">{{ title }}</h1>
-        <p class="mt-2 text-slate-500">{{ subtitle }}</p>
-
-        <div class="mt-8">
-          <slot />
-        </div>
-
-        <div class="mt-6 text-center text-sm text-slate-500">
-          <slot name="footer" />
-        </div>
+        <NuxtPage />
       </div>
     </main>
   </div>

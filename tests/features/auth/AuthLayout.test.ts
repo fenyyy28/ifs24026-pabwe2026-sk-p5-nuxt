@@ -3,14 +3,12 @@ import { mount } from "@vue/test-utils";
 import AuthLayout from "~/features/auth/layouts/AuthLayout.vue";
 
 describe("AuthLayout", () => {
-  it("menampilkan judul, subjudul, dan slot", () => {
+  it("menampilkan panel merek dan halaman anak", () => {
     const wrapper = mount(AuthLayout, {
-      props: { title: "Judul", subtitle: "Subjudul" },
-      slots: { default: "<p>isi form</p>", footer: "<span>tautan</span>" },
+      global: { components: { NuxtPage: { template: '<div id="page">halaman login</div>' } } },
     });
-    expect(wrapper.text()).toContain("Judul");
-    expect(wrapper.text()).toContain("Subjudul");
-    expect(wrapper.text()).toContain("isi form");
-    expect(wrapper.text()).toContain("tautan");
+    expect(wrapper.text()).toContain("Kelola arus kas pribadi dengan lebih tenang.");
+    expect(wrapper.text()).toContain("Delcom Cash Flow");
+    expect(wrapper.get("#page").text()).toBe("halaman login");
   });
 });
