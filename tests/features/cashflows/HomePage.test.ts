@@ -222,4 +222,18 @@ describe("HomePage", () => {
     await flushPromises();
     expect(mocked.deleteAllCashFlows).not.toHaveBeenCalled();
   });
-});
+
+  it("tombol ubah dan hapus pada tampilan kartu (mobile) berfungsi", async () => {
+    mocked.deleteCashFlow!.mockResolvedValue("Berhasil menghapus data");
+    const wrapper = factory();
+    await flushPromises();
+
+    // DOM berisi dua baris tabel lebih dulu, lalu dua kartu (indeks 2 dan 3)
+    await wrapper.findAll('[data-action="edit"]')[2]!.trigger("click");
+    expect(wrapper.get("#change-modal").attributes("data-id")).toBe("4");
+    await wrapper.get("#change-close").trigger("click");
+
+    await wrapper.findAll('[data-action="delete"]')[2]!.trigger("click");
+    await flushPromises();
+    expect(mocked.deleteCashFlow).toHaveBeenCalledWith(4);
+  });});
