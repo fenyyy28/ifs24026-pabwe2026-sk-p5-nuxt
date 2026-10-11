@@ -19,6 +19,9 @@ export default defineNuxtConfig({
   // Mengaktifkan <NuxtPage />; daftar rute ada di src/routes.ts via src/router.options.ts
   pages: true,
 
+  // Tampilan awal instan sebelum JavaScript selesai dimuat (SPA)
+  spaLoadingTemplate: "spa-loading-template.html",
+
   app: {
     head: {
       htmlAttrs: { lang: "id" },
