@@ -1,11 +1,27 @@
-import Swal from "sweetalert2";
-
 const PRIMARY_COLOR = "#4f46e5";
 const DANGER_COLOR = "#e11d48";
 
+/* ---------- SweetAlert2 dimuat saat pertama kali dibutuhkan ---------- */
+
+type SweetAlert = typeof import("sweetalert2").default;
+let swalPromise: Promise<SweetAlert> | undefined;
+
+function loadSwal(): Promise<SweetAlert> {
+  if (!swalPromise) {
+    swalPromise = import("sweetalert2").then((module) => module.default);
+  }
+  return swalPromise;
+}
+
+/** Memuat SweetAlert2 lebih awal (dipakai test agar dialog langsung siap). */
+export async function preloadDialogs(): Promise<void> {
+  await loadSwal();
+}
+
 /* ---------- Dialog SweetAlert2 ---------- */
 
-export function showSuccessDialog(message: string, title = "Berhasil") {
+export async function showSuccessDialog(message: string, title = "Berhasil") {
+  const Swal = await loadSwal();
   return Swal.fire({
     icon: "success",
     title,
@@ -14,7 +30,8 @@ export function showSuccessDialog(message: string, title = "Berhasil") {
   });
 }
 
-export function showErrorDialog(message: string, title = "Terjadi Kesalahan") {
+export async function showErrorDialog(message: string, title = "Terjadi Kesalahan") {
+  const Swal = await loadSwal();
   return Swal.fire({
     icon: "error",
     title,
@@ -30,6 +47,7 @@ export async function showConfirmDialog(
   confirmText = "Ya",
   cancelText = "Batal",
 ): Promise<boolean> {
+  const Swal = await loadSwal();
   const result = await Swal.fire({
     icon: "warning",
     title,

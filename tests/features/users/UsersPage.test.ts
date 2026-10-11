@@ -7,6 +7,7 @@ import type { User } from "~/features/users/api/userApi";
 import UsersPage from "~/features/users/pages/UsersPage.vue";
 import { useUsersStore } from "~/features/users/states/usersStore";
 import { ApiError } from "~/helpers/apiHelper";
+import { preloadDialogs } from "~/helpers/toolsHelper";
 
 vi.mock("vue-router", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 vi.mock("sweetalert2", () => ({ default: { fire: vi.fn() } }));
@@ -36,7 +37,8 @@ function factory() {
   });
 }
 
-beforeEach(() => {
+beforeEach(async () => {
+  await preloadDialogs();
   getUsers.mockReset();
   fire.mockReset();
 });

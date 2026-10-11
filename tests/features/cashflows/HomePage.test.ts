@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import * as api from "~/features/cashflows/api/cashFlowApi";
 import HomePage from "~/features/cashflows/pages/HomePage.vue";
 import { ApiError } from "~/helpers/apiHelper";
+import { preloadDialogs } from "~/helpers/toolsHelper";
 import { cashFlows, stats } from "../../support/fixtures";
 
 vi.mock("sweetalert2", () => ({ default: { fire: vi.fn() } }));
@@ -60,7 +61,8 @@ function factory() {
   });
 }
 
-beforeEach(() => {
+beforeEach(async () => {
+  await preloadDialogs();
   Object.values(mocked).forEach((fn) => fn.mockReset());
   fire.mockReset();
   fire.mockResolvedValue({ isConfirmed: true });
