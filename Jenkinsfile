@@ -113,7 +113,7 @@ pipeline {
                         --severity HIGH,CRITICAL \
                         --format sarif \
                         --output trivy-results.sarif \
-                        --exit-code 0.
+                        --exit-code 0 .
                         
 
                     echo "=== Trivy Result ==="
